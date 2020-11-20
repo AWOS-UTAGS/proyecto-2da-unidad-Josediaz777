@@ -12,64 +12,22 @@ app.get("/", function (req, res) {
   res.send("<h1> Bienvenido a mi Servidor REST (localhost) </h1>");
 });
 
-app.get("/user", function (req, res) {
-  res.json({
-    ok: 200,
-    mensaje: "Usuarios consultados con exito.",
-  });
-});
+app.use(require('./routes/usuario'))
 
-app.post("/user", function (req, rest) {
-  let nombre = req.body.nombre;
+mongoose.connect(
+  "mongodb://localhost:27017/cafeteria",
+  {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  },
+  (err, res) => {
+    if (err) throw err;
 
-  let body = req.body;
-  if (nombre == undefined) {
-    res.status(400).json({
-      ok: 400,
-      mensaje: "Favor de enviar el nombre",
-    });
-  } else {
-    rest.json({
-      ok: 200,
-      mensaje: "Usuario insertado con exito.",
-
-      body: body,
-    });
+    console.log("Base de datos ONLINE");
   }
-});
-
-app.put("/user/:id/:nombre", function (req, rest) {
-  let id = req.params.id;
-  let nombre = req.params.nombre;
-
-  rest.json({
-    ok: 200,
-    mensaje: "Usuario actualizado con exito",
-    id: id,
-    nombre: nombre,
-  });
-});
-
-app.delete("/user/:id", function (req, rest) {
-  let id = req.params.id;
-  rest.json({
-    ok: "200",
-    mensaje: "Usuario eliminado con exito",
-    id: id,
-  });
-});
-
-mongoose.connect("mongodb://localhost:27017/cafeteria",{
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false
-}, (err, res) => {
-
-  if(err) throw err;
-
-  console.log('Base de datos ONLINE');
-});
+);
 
 app.listen(process.env.PORT, () => {
   console.log("El servidor esta en linea por el puerto ", process.env.PORT);
