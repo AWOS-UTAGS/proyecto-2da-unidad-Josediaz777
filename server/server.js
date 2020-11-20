@@ -1,64 +1,76 @@
-require ('./config/config.js')
-const express = require('express');
-const bodyParser = require('body-parser');
+require("./config/config.js");
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-app.get('/', function(req, res) {
-    res.send('<h1> Bienvenido a mi Servidor REST </h1>')
-})
+app.get("/", function (req, res) {
+  res.send("<h1> Bienvenido a mi Servidor REST (localhost) </h1>");
+});
 
-app.get('/user', function(req, res) {
-    res.json({
-        ok: 200,
-        mensaje: 'Usuarios consultados con exito.'
-    })
-})
+app.get("/user", function (req, res) {
+  res.json({
+    ok: 200,
+    mensaje: "Usuarios consultados con exito.",
+  });
+});
 
-app.post('/user', function(req, rest) {
-    
-    let nombre = req.body.nombre;
+app.post("/user", function (req, rest) {
+  let nombre = req.body.nombre;
 
-    let body = req.body;
-    if (nombre == undefined) {
-        res.status(400).json({
-            ok: 400,
-            mensaje: "Favor de enviar el nombre"
-        })
-    } else {
-        rest.json({
-            ok: 200,
-            mensaje: 'Usuario insertado con exito.',
-           
-            body: body
-        })
-    }
-})
-
-app.put('/user/:id/:nombre', function(req, rest) {
-    let id = req.params.id;
-    let nombre = req.params.nombre;
-
+  let body = req.body;
+  if (nombre == undefined) {
+    res.status(400).json({
+      ok: 400,
+      mensaje: "Favor de enviar el nombre",
+    });
+  } else {
     rest.json({
-        ok: 200,
-        mensaje: 'Usuario actualizado con exito',
-        id: id,
-        nombre: nombre
-    })
-})
+      ok: 200,
+      mensaje: "Usuario insertado con exito.",
 
-app.delete('/user/:id', function(req, rest) {
-    let id = req.params.id;
-    rest.json({
-        ok: '200',
-        mensaje: 'Usuario eliminado con exito',
-        id: id
-    })
-})
+      body: body,
+    });
+  }
+});
+
+app.put("/user/:id/:nombre", function (req, rest) {
+  let id = req.params.id;
+  let nombre = req.params.nombre;
+
+  rest.json({
+    ok: 200,
+    mensaje: "Usuario actualizado con exito",
+    id: id,
+    nombre: nombre,
+  });
+});
+
+app.delete("/user/:id", function (req, rest) {
+  let id = req.params.id;
+  rest.json({
+    ok: "200",
+    mensaje: "Usuario eliminado con exito",
+    id: id,
+  });
+});
+
+mongoose.connect("mongodb://localhost:27017/cafeteria",{
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+}, (err, res) => {
+
+  if(err) throw err;
+
+  console.log('Base de datos ONLINE');
+});
 
 app.listen(process.env.PORT, () => {
-        console.log('El servidor esta en linea por el puerto ', process.env.PORT);
-    })
+  console.log("El servidor esta en linea por el puerto ", process.env.PORT);
+});
