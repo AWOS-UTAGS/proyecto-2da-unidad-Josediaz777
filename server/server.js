@@ -12,7 +12,8 @@ app.get("/", function (req, res) {
   res.send("<h1> Bienvenido a mi Servidor REST (localhost) </h1>");
 });
 
-app.use(require('./routes/usuario'))
+app.use(require('./routes/usuario'));
+app.use(require('./routes/categoria'));
 
 mongoose.connect(
   "mongodb://localhost:27017/cafeteria",
