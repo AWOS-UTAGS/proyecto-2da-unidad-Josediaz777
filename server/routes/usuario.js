@@ -4,7 +4,7 @@ const _ = require("underscore");
 const Usuario = require("../models/usuario");
 const app = express();
 
-app.get("/user", function (req, res) {
+app.get("/usuario", function (req, res) {
   let desde = req.query.desde || 0;
   let hasta = req.query.hasta || 5;
 
@@ -29,10 +29,11 @@ app.get("/user", function (req, res) {
     });
 });
 
-app.post("/user", function (req, res) {
+app.post("/usuario", function (req, res) {
   let body = req.body;
   let usr = new Usuario({
     nombre: body.nombre,
+    apellido: body.apellido,
     email: body.email,
     password: bcrypt.hashSync(body.password, 10)
   });
@@ -54,9 +55,9 @@ app.post("/user", function (req, res) {
   });
 });
 
-app.put("/user/:id", function (req, res) {
+app.put("/usuario/:id", function (req, res) {
   let id = req.params.id;
-  let body = _.pick(req.body, ["nombre", "email"]);
+  let body = _.pick(req.body, ["nombre", "email", "apellido"]);
 
   Usuario.findByIdAndUpdate(
     id,
@@ -80,7 +81,7 @@ app.put("/user/:id", function (req, res) {
   );
 });
 
-app.delete("/user/:id", function (req, res) {
+app.delete("/usuario/:id", function (req, res) {
   // let id = req.params.id;
 
   // Usuario.deleteOne({ _id: id }, (err, usuarioBorrado) => {
